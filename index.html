@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新訪員訓練課程｜居家托育督導</title>
+<style>
+  :root{
+    --navy:#122B3C;
+    --navy-2:#1C3F55;
+    --teal:#1F6F6B;
+    --teal-2:#2C8C86;
+    --mint:#8FD9C4;
+    --mint-deep:#4FAE9A;
+    --paper:#F3F6F5;
+    --card:#FFFFFF;
+    --ink:#16232A;
+    --ink-soft:#4B5D63;
+    --line:#DCE6E4;
+    --amber:#B5651D;
+    --amber-bg:#FBF0E4;
+    --danger:#9A3324;
+    --danger-bg:#FBEAE6;
+    --good:#1F6F4B;
+    --good-bg:#E7F5EC;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.7;
+  }
+  .topbar{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 55%,var(--teal) 130%);
+    color:#fff;
+    padding:26px 20px 22px;
+  }
+  .topbar-inner{max-width:900px;margin:0 auto;}
+  .eyebrow{font-size:12.5px;letter-spacing:.14em;color:var(--mint);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--mint);display:inline-block;}
+  h1{font-size:21px;margin:0 0 6px;font-weight:800;letter-spacing:.02em;}
+  .subtitle{font-size:13.5px;color:#CFE3DE;margin-bottom:16px;}
+
+  .progress-wrap{margin-top:6px;}
+  .progress-top{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:#CFE3DE;margin-bottom:6px;}
+  .progress-top b{color:#fff;font-size:14px;}
+  .progress-bar-track{background:rgba(255,255,255,0.18);border-radius:999px;height:10px;overflow:hidden;}
+  .progress-bar-fill{background:linear-gradient(90deg,var(--mint-deep),var(--mint));height:100%;border-radius:999px;transition:width .3s ease;}
+
+  .wrap{max-width:900px;margin:0 auto;padding:22px 16px 80px;}
+
+  /* module list */
+  .stage-group{margin-bottom:8px;}
+  .stage-label{font-size:12px;font-weight:800;color:var(--teal);letter-spacing:.04em;margin:26px 4px 10px;display:flex;align-items:center;gap:8px;}
+  .stage-label .n{background:var(--navy);color:#fff;border-radius:7px;padding:2px 9px;font-size:11.5px;}
+  .stage-group:first-child .stage-label{margin-top:6px;}
+
+  .mod-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;margin-bottom:12px;cursor:pointer;
+    display:flex;align-items:center;gap:14px;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .mod-card:hover{border-color:var(--mint-deep);box-shadow:0 2px 10px rgba(18,43,60,0.08);}
+  .mod-ring{flex:0 0 auto;width:46px;height:46px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;}
+  .mod-ring svg{position:absolute;inset:0;transform:rotate(-90deg);}
+  .mod-ring .pct{font-size:11px;font-weight:800;color:var(--navy);z-index:1;}
+  .mod-body{flex:1;min-width:0;}
+  .mod-title{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+  .mod-desc{font-size:12.5px;color:var(--ink-soft);}
+  .mod-status{flex:0 0 auto;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .status-done{background:var(--good-bg);color:var(--good);}
+  .status-progress{background:var(--amber-bg);color:var(--amber);}
+  .status-new{background:var(--paper);color:var(--ink-soft);border:1px solid var(--line);}
+
+  .reset-row{text-align:center;margin-top:30px;}
+  .reset-btn{
+    font-family:inherit;font-size:12px;color:var(--ink-soft);
+    background:none;border:1px solid var(--line);border-radius:999px;
+    padding:7px 16px;cursor:pointer;
+  }
+  .reset-btn:hover{border-color:var(--danger);color:var(--danger);}
+
+  /* module detail view */
+  #detail{display:none;}
+  .back-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13px;font-weight:700;color:var(--mint);
+    background:none;border:none;cursor:pointer;padding:0;margin-bottom:4px;
+  }
+  .detail-head{margin:10px 0 4px;}
+  .detail-stage{font-size:12px;color:var(--mint);font-weight:700;letter-spacing:.04em;margin-bottom:4px;}
+  .detail-title{font-size:19px;font-weight:800;margin:0;}
+  .detail-desc{font-size:13px;color:#CFE3DE;margin-top:6px;}
+
+  .content-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;}
+  .content-card h3{font-size:14.5px;color:var(--navy);margin:0 0 10px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .content-card h3 .dot{width:8px;height:8px;border-radius:50%;background:var(--mint-deep);flex:0 0 auto;}
+  .content-card ul{margin:0;padding-left:20px;font-size:13.8px;color:var(--ink);}
+  .content-card li{margin-bottom:7px;}
+  .content-card li:last-child{margin-bottom:0;}
+  .content-card b{color:var(--navy-2);}
+  .lawtag{display:block;color:var(--teal);font-size:12px;font-weight:700;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);}
+  .fine{display:inline-block;background:var(--danger-bg);color:var(--danger);padding:1px 8px;border-radius:6px;font-weight:700;font-size:12.5px;}
+  .amount{display:inline-block;background:var(--amber-bg);color:var(--amber);padding:1px 8px;border-radius:6px;font-weight:700;font-size:12.5px;}
+
+  .quiz-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px;}
+  .quiz-head{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+  .quiz-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:18px;}
+  .q-block{border-top:1px solid var(--line);padding-top:16px;margin-top:16px;}
+  .q-block:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+  .q-text{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+  .opt{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;
+    margin-bottom:8px;cursor:pointer;font-size:13.5px;color:var(--ink);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{border-color:var(--mint-deep);}
+  .opt input{margin-top:2px;flex:0 0 auto;}
+  .opt.correct{border-color:var(--good);background:var(--good-bg);color:var(--good);font-weight:700;}
+  .opt.wrong{border-color:var(--danger);background:var(--danger-bg);color:var(--danger);font-weight:700;}
+  .opt.disabled{cursor:default;}
+  .q-explain{font-size:12.5px;color:var(--ink-soft);margin-top:6px;padding:8px 12px;background:var(--paper);border-radius:8px;display:none;}
+
+  .quiz-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
+  .btn{
+    font-family:inherit;font-size:13.5px;font-weight:700;
+    padding:10px 20px;border-radius:10px;border:none;cursor:pointer;
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-2);}
+  .btn-primary:disabled{background:var(--line);color:var(--ink-soft);cursor:not-allowed;}
+
+  .result-banner{border-radius:14px;padding:18px 20px;margin-bottom:16px;text-align:center;}
+  .result-pass{background:var(--good-bg);color:var(--good);}
+  .result-fail{background:var(--danger-bg);color:var(--danger);}
+  .result-score{font-size:24px;font-weight:800;margin-bottom:4px;}
+  .result-msg{font-size:13px;}
+  .result-actions{display:flex;justify-content:center;gap:10px;margin-top:14px;}
+  .btn-ghost{background:#fff;border:1.5px solid currentColor;color:inherit;}
+
+  footer{text-align:center;font-size:12px;color:var(--ink-soft);padding:20px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div id="home-header">
+      <div class="eyebrow">居家托育督導・新進人員養成</div>
+      <h1>新訪員訓練課程</h1>
+      <div class="subtitle">9個模組・涵蓋資格規範、訪視技巧、環境與品質檢核、緊急通報、裁罰與補助制度</div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>整體學習進度</span><b id="overallPct">0%</b></div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="overallBar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div id="detail-header" style="display:none;">
+      <button class="back-btn" onclick="showHome()">← 返回課程總覽</button>
+      <div class="detail-head">
+        <div class="detail-stage" id="detailStage"></div>
+        <h1 class="detail-title" id="detailTitle"></h1>
+        <div class="detail-desc" id="detailDesc"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div id="home">
+    <div id="moduleList"></div>
+    <div class="reset-row"><button class="reset-btn" onclick="resetProgress()">重設全部學習進度</button></div>
+  </div>
+
+  <div id="detail">
+    <div id="detailContent"></div>
+    <div id="quizArea"></div>
+  </div>
+
+</div>
+
+<footer>財團法人彭婉如文教基金會・居家托育服務中心 內部訓練教材</footer>
+
+<script>
+/* ===================== 模組內容資料 ===================== */
+const MODULES = [
+{
+  id:"m1", stage:1, stageLabel:"第一階段・入門", title:"資格與收托規範基礎",
+  desc:"保母登記資格、消極資格限制、托育型態與收托人數上限、在職訓練與健康檢查規定",
+  sections:[
+    {h:"擔任居家托育人員的資格", points:[
+      "應為<b>年滿18歲</b>之成年人，並具備下列資格之一才能辦理登記：取得<b>保母人員或托育人員技術士證</b>；或高中以上幼兒保育、家政、護理相關科系畢業；或修畢托育人員專業訓練課程並領有結業證書。",
+      "登記證書效期<b>6年</b>，應於屆滿前3個月內申請換發，未辦理屆期換發將被<b>廢止登記證</b>。"
+    ], law:"兒少權法第26條"},
+    {h:"哪些人不得擔任保母（消極資格）", points:[
+      "曾犯性侵害、性騷擾、兒少性剝削之罪，經緩起訴或有罪判決確定者。",
+      "曾犯毒品危害防制條例之罪，經緩起訴或有罪判決確定者。",
+      "有兒少權法第49條各款行為（兒虐、身心虐待、遺棄等），經查證屬實者。",
+      "受監護或輔助宣告尚未撤銷者；曾犯家庭暴力罪，經緩起訴或有罪判決確定日起<b>5年內</b>。",
+      "以上情形已登記者，應<b>廢止登記、命停止服務並強制轉介</b>收托兒童。",
+      "保母<b>同住家人</b>若有性犯罪、毒品犯罪或重大不當行為，該保母僅能提供<b>「到宅托育」</b>，不得在宅收托。"
+    ], law:"兒少權法第26條之1（消極資格）、第26條之2（同住家人限制）"},
+    {h:"托育型態的時間定義", points:[
+      "半日托育：每日收托<b>6小時以內</b>。",
+      "日間托育：每日超過6小時、<b>12小時以內</b>。",
+      "全日托育：每日<b>超過16小時</b>。",
+      "夜間托育：夜間至翌晨，<b>不超過12小時</b>。",
+      "延長托育／臨時托育：以上型態以外之延長或臨時服務。"
+    ], law:"居家式托育服務提供者登記及管理辦法第2條、第6條"},
+    {h:"收托人數上限與計算範疇", points:[
+      "半日、日間、延長、臨時托育：單一保母最多<b>4人</b>，其中未滿2歲最多<b>2人</b>。",
+      "全日或夜間托育：單一保母最多<b>2人</b>。",
+      "聯合托育（2名以上保母同處所）：最多<b>4人</b>，其中全日或夜間最多2人，須分配主要照顧人。",
+      "人數計算範疇：保母未滿3歲之子女與受監護者、未滿5歲之三親等內兒童、<b>未滿12歲以下非三親等兒童，不論是否收費均須列計</b>。"
+    ], law:"登記及管理辦法第7條"},
+    {h:"執業義務", points:[
+      "在職訓練：每年至少<b>18小時</b>；每2年在職訓練應包括<b>8小時以上</b>之基本救命術（CPR）。",
+      "健康檢查：每2年至少<b>1次</b>。",
+      "開始及結束收托每一兒童，應於<b>7日內</b>通報主管機關備查。",
+      "收托時間<b>不得兼職或經營事業</b>，也不得巧立名目額外收費，不得規避、妨礙或拒絕訪視輔導。"
+    ], law:"登記及管理辦法第4條（在職訓練/健康檢查）、第5條、第11至17條（收托通報與禁止行為）"}
+  ],
+  quiz:[
+    {q:"保母資格條件不包含下列何者？", options:["技術士證","高中以上幼保相關科系畢業","年滿18歲","擁有汽車駕照"], correct:3, explain:"資格三選一為技術士證、相關科系畢業、或結業證書，並須年滿18歲，與駕照無關。"},
+    {q:"全日托育的每日收托時數定義為？", options:["6小時以內","6至12小時","超過16小時","12至16小時"], correct:2, explain:"全日托育定義為每日超過16小時；日間托育為6至12小時。"},
+    {q:"單一保母提供半日、日間托育，最多可收托幾名兒童？", options:["2人","4人","6人","無上限"], correct:1, explain:"半日/日間/延時/臨托最多4人，其中未滿2歲最多2人；全日或夜托則最多2人。"},
+    {q:"保母每年應完成在職訓練時數至少多少小時？", options:["8小時","12小時","18小時","24小時"], correct:2, explain:"每年至少18小時，且每2年須含8小時以上CPR訓練。"},
+    {q:"保母同住家人若涉及性犯罪或毒品前科，該保母可以？", options:["完全不受影響，正常收托","只能提供到宅托育，不得在宅收托","必須立即廢止登記","可繼續在宅收托但須申報"], correct:1, explain:"同住者有重大風險時，保母僅能提供到宅托育，不得在宅收托。"}
+  ]
+},
+{
+  id:"m2", stage:2, stageLabel:"第二階段・核心技能", title:"訪視輔導核心技巧",
+  desc:"訪視頻率規定、兒虐警訊觀察、發現風險的處理SOP、紀錄與審閱時效",
+  sections:[
+    {h:"訪視頻率規定", points:[
+      "新收托兒童：每次收托之日起<b>30日內</b>須完成新收托訪視。",
+      "新手保母（初次收托）：<b>1年內訪視4次</b>，首次訪視須30日內完成。",
+      "一般保母（收托滿1年以上）：每年至少訪視<b>2次</b>；若提供全日、夜間托育，或2名以上保母同處所共同托育，提升為每年至少<b>4次</b>。",
+      "加強訪視：每年至少<b>6次</b>，適用於全日/夜托且收3歲以下或特殊需求幼兒、長期收滿3名以上且評估有照顧負荷之虞、3個月內發現照顧風險或持續受傷情形、經中心評估列管者。",
+      "臺北市特別規定：<b>「四娃」及非三親等的任何全日托，一律一年六訪</b>。"
+    ], law:"直轄市、縣(市)政府居家托育服務中心訪視工作指引（115年8月19日修正）第五點；臺北市加訪規定另依臺北市府規定辦理"},
+    {h:"訪視原則與兒虐警訊觀察", points:[
+      "訪視應<b>不預約、安排不同時段</b>，並須<b>親見兒童並互動評估</b>。",
+      "觀察兒童外觀：體重與身高不成比例、不尋常傷痕或新舊傷夾雜、經常性受傷、受傷應就醫而未就醫。",
+      "觀察兒童情緒行為：不願互動、恐懼退縮焦慮、精神恍惚、自傷行為、搖晃身體。",
+      "觀察保母社會與心理狀況：焦慮壓力、衝動控制力較差、有獨留兒童風險、同住成員特殊身心狀況或關係衝突。"
+    ], law:"訪視工作指引（115年8月19日修正）第六點"},
+    {h:"發現風險時的處理SOP", points:[
+      "① 請托育人員<b>說明原因及有無適當處理</b>。",
+      "② 仍有疑慮時，向家長、主要照顧者或網絡人員<b>確認兒童狀況</b>。",
+      "③ 回報居家托育服務中心<b>督導</b>並依情形續處：無虞→依分級訪視辦理；有照顧風險之虞→<b>增加訪視次數</b>；遭不當對待或受虐→<b>依法通報</b>。",
+      "④ 兒童身上有傷痕，應<b>多角度拍照存證</b>。",
+      "⑤ 若當次訪視未能親見兒童，且托育人員無法清楚交代去向，應儘速聯繫家長並安排近日再訪；<b>行蹤不明應立即通報主管機關</b>。"
+    ], law:"訪視工作指引（115年8月19日修正）第七點"},
+    {h:"紀錄與審閱時效", points:[
+      "訪視輔導員應於訪視<b>次日起7個工作日內</b>完成訪視紀錄。",
+      "督導應於收到紀錄後<b>10個工作日內</b>完成審閱。",
+      "訪視輔導員以<b>每2至3年輪調服務區域</b>為原則。"
+    ], law:"訪視工作指引（115年8月19日修正）第八點、第九點"}
+  ],
+  quiz:[
+    {q:"新收托兒童應於幾日內完成首次訪視？", options:["7日","14日","30日","60日"], correct:2, explain:"每次新收托兒童之日起30日內須完成新收托訪視。"},
+    {q:"「加強訪視」對象每年至少訪視幾次？", options:["2次","4次","6次","8次"], correct:2, explain:"加強訪視每年至少6次，並得視收托情形增加。"},
+    {q:"臺北市對「四娃」的訪視頻率規定為？", options:["一年二訪","一年四訪","一年六訪","一年十二訪"], correct:2, explain:"臺北市規定「四娃」及非三親等全日托一律一年六訪。"},
+    {q:"訪視發現兒童身上有疑似受虐傷痕，依SOP第一步應該？", options:["立即報警處理","請托育人員說明原因及有無適當處理","直接終止本次訪視","留待下次訪視再確認"], correct:1, explain:"SOP第一步是請托育人員說明，若仍有疑慮再向家長／網絡人員確認，最後依情形通報。"},
+    {q:"訪視紀錄應於訪視後幾個工作日內完成？", options:["3個工作日","5個工作日","7個工作日","10個工作日"], correct:2, explain:"訪視輔導員應於訪視次日起7個工作日內完成訪視紀錄，督導則於收到後10個工作日內審閱。"},
+    {q:"訪視輔導員原則上多久輪調一次服務區域？", options:["每年","每2至3年","每5年","不需輪調"], correct:1, explain:"以每2至3年輪調服務區域為原則。"}
+  ]
+},
+{
+  id:"m3", stage:3, stageLabel:"第三階段・核心技能", title:"環境安全檢核",
+  desc:"42項環境安全檢核指標、常見高風險項目數值標準、到宅托育例外規定",
+  sections:[
+    {h:"檢核總覽", points:[
+      "共<b>42項</b>指標，分為16大類：門、陽台、地板、逃生出口、窗戶、室內樓梯、傢具設施、電器用品、電線插座、瓦斯熱水器、消防設施、物品收納、收托兒睡床、沐浴設備、緊急狀況處理設備、其他。",
+      "<b>到宅托育免予環境安全檢核</b>，由委託人（家長）自負全責。",
+      "每年至少須完成<b>一次全數項目</b>檢核。",
+      "未通過檢核：由居家托育服務中心於<b>30日內</b>輔導改善；屆期未改善才發文社會局處理。"
+    ], law:"訪視工作指引（115年8月19日修正）附件一「托育服務環境安全檢核表」"},
+    {h:"常見高風險項目的數值標準", points:[
+      "陽台圍欄：高度不得小於<b>110公分</b>（十層樓以上不得小於120公分），底部與地面間隔須低於10公分，欄杆間隔須小於6公分。",
+      "室內樓梯：欄杆間距小於<b>6公分</b>；出入口柵欄須高於<b>85公分</b>、間隔小於6公分。",
+      "插座：應置高於<b>110公分</b>以上，或隱蔽並加裝防護蓋。",
+      "門鎖、鑰匙、遙控器等：離地或懸掛高度至少<b>110公分</b>以上，收托兒無法碰觸。",
+      "窗簾拉繩：收線器位置至少離地<b>150公分</b>以上，或使用無拉繩窗簾。",
+      "急救箱：至少<b>7項</b>急救用品（體溫計、無菌紗布、棉支、OK繃、繃帶、生理食鹽水、冰敷袋等），放置於成人易取、兒童無法碰觸處。",
+      "緊急聯絡電話表及逃生路線圖須置於固定明顯處。"
+    ], law:"訪視工作指引（115年8月19日修正）附件一"}
+  ],
+  quiz:[
+    {q:"環境安全檢核共有幾項指標？", options:["30項","37項","42項","50項"], correct:2, explain:"共42項指標，分為16大類。"},
+    {q:"到宅托育是否需要進行環境安全檢核？", options:["需要，比照在宅標準","不需要，由家長自負全責","僅需檢核逃生設備","視個案決定"], correct:1, explain:"到宅托育因處所非托育人員可自行決定安排，免予環境安全檢核。"},
+    {q:"陽台圍欄高度規定至少多少公分（十層樓以下）？", options:["85公分","100公分","110公分","120公分"], correct:2, explain:"十層樓以下不得小於110公分，十層樓以上不得小於120公分。"},
+    {q:"急救箱急救用品至少應包含幾項？", options:["3項","5項","7項","10項"], correct:2, explain:"急救用品至少須包含七項，如體溫計、無菌紗布、OK繃等。"},
+    {q:"插座應置高於多少公分或加裝防護？", options:["85公分","100公分","110公分","120公分"], correct:2, explain:"插座應置高於110公分以上，或隱蔽於傢具後方並加裝防護。"},
+    {q:"環境安全檢核未通過，居托中心應於幾日內輔導改善？", options:["7日","14日","30日","60日"], correct:2, explain:"由居托中心於30日內輔導改善；屆期未改善才發文社會局處理。"}
+  ]
+},
+{
+  id:"m4", stage:4, stageLabel:"第四階段・核心技能", title:"照顧品質評估",
+  desc:"37項負向風險指標、七大評估類別、健康照顧與互動知能重點",
+  sections:[
+    {h:"評估總覽", points:[
+      "共<b>37項</b>負向風險指標，分七大類：常規建立（1-5）、健康照顧與保健（6-17）、兒童活動與溝通技巧（18-21）、餐點預備與用餐（22-26）、環境安全（27-31）、兒童發展/情緒與行為困擾（32-33）、居家托育人員照顧互動知能（34-37）。",
+      "勾選「<b>是</b>」代表<b>有照顧風險</b>，應於訪視紀錄載明並予以輔導；當場無法觀察或了解時，該項可不予勾選。"
+    ], law:"訪視工作指引（115年8月19日修正）附件二"},
+    {h:"健康照顧與保健重點", points:[
+      "是否長時間將兒童放置於圍欄內空間；協助沐浴過程是否造成危險。",
+      "是否以拖、拉、扯、搖晃等<b>不當方式</b>抱持或牽引兒童。",
+      "是否依託藥單給藥、有無擅自提供非醫囑藥物。",
+      "睡眠設備與空間是否安全，<b>1歲以下是否採不安全睡姿（趴睡、側睡）</b>。",
+      "排便後清潔更換尿布是否適當；是否定期進行兒童發展篩檢。"
+    ], law:"訪視工作指引（115年8月19日修正）附件二"},
+    {h:"其他重點類別", points:[
+      "兒童活動與溝通：是否未提供適齡教玩具、是否有強制餵食等危險餵奶行為。",
+      "餐點預備：調奶或備餐方式是否錯誤、餐具是否不衛生、備餐時間是否過長。",
+      "環境安全（品質面向）：是否有導致跌墜落、燒燙傷、溺水或窒息之風險，外出交通方式是否有風險。",
+      "照顧互動知能：是否對兒童缺乏耐心、採忽略或逃避方式互動、對兒童有過高不符實際的期待。"
+    ], law:"訪視工作指引（115年8月19日修正）附件二"}
+  ],
+  quiz:[
+    {q:"照顧品質評估指標共有幾項？", options:["30項","37項","42項","45項"], correct:1, explain:"共37項負向風險指標。"},
+    {q:"照顧品質評估分為幾大類？", options:["5大類","6大類","7大類","8大類"], correct:2, explain:"分為常規建立、健康照顧與保健、兒童活動與溝通技巧、餐點預備與用餐、環境安全、兒童發展情緒行為困擾、照顧互動知能，共七大類。"},
+    {q:"評估表中勾選指標「是」代表什麼意思？", options:["表示無風險","表示有照顧風險，應載明並輔導","表示保母表現優良","不需要任何處理"], correct:1, explain:"勾選「是」代表有照顧風險，應於訪視紀錄載明並予以輔導。"},
+    {q:"1歲以下兒童睡眠時應避免哪種睡姿？", options:["仰睡","趴睡或側睡","側臥","以上皆可"], correct:1, explain:"1歲以下若採趴睡或側睡屬不安全睡姿，是健康照顧類的檢核重點。"}
+  ]
+},
+{
+  id:"m5", stage:5, stageLabel:"第五階段・風險處理", title:"緊急事件與兒虐通報責任",
+  desc:"突發緊急事件通報系統、兒虐相關罰則、責任通報時限",
+  sections:[
+    {h:"突發或緊急事件的定義與通報系統", points:[
+      "定義：受托幼兒有死亡或死亡之虞，或重傷、送醫、中毒、走失、受到侵害等，且須主管機關及時知悉或立即協處之事件。",
+      "<b>兒童保護事件（含疑似）</b>：性侵害、性霸凌、藥物濫用、遺棄、身心虐待、獨處於危險環境、照顧疏忽等 → 須同時通報<b>社家署、社會局、113關懷e起來</b>。",
+      "<b>事故傷害</b>（墜落、溺水、梗塞、窒息、中毒等）：須通報社家署與社會局；涉及重傷及媒體報導等重大案件才通報113。",
+      "<b>疾病事件</b>（熱痙攣、中暑、休克、嬰幼兒猝死症、嚴重群聚感染）：重症時通報社家署與社會局。",
+      "<b>其他事件</b>（托育人員與家長或托育人員間嚴重衝突）：三管道皆須通報。"
+    ], law:"臺北市居家托育人員突發或緊急事件通報事件原則（依社家署113年2月17日修正通報單內容辦理）"},
+    {h:"通報時限與補充原則", points:[
+      "事故傷害具延續性：若症狀於托育結束或至次日送托時仍未緩解，應於<b>知悉起24小時內</b>通報。",
+      "若發現送托兒童係於家中或非收托時間遭受虐待，應<b>依法逕行通報，無須通報社家署</b>。",
+      "通報中央案件：知悉後24小時完成社家署通報，於系統列印核章通報本局，無須再填寫通報單。"
+    ], law:"臺北市居家托育人員突發或緊急事件通報事件原則"},
+    {h:"兒虐相關罰則（與通報連動）", points:[
+      "知悉兒虐、毒品或重大傷害<b>未於24小時內通報</b>者，處<span class='fine'>6,000-60,000元</span>罰鍰（兒少權法第53、100條）。",
+      "兒虐、身心虐待、遺棄等<b>重大違法</b>，處<span class='fine'>60,000-600,000元</span>罰鍰，並得公布姓名；準公共保母將被<b>退出準公共合作</b>（兒少權法第49、97條）。",
+      "使6歲以下兒童或需特別看護兒童<b>獨處或交由不適當之人</b>照顧，處<span class='fine'>3,000-15,000元</span>罰鍰（兒少權法第51、99條）。"
+    ], law:"兒少權法第49條、第51條、第53條、第97條、第99條、第100條；施行細則第14條"}
+  ],
+  quiz:[
+    {q:"突發緊急事件通報中，兒童保護事件（含疑似）須通報哪些系統？", options:["僅社家署","社家署＋社會局＋113關懷e起來","僅113專線","不需要通報"], correct:1, explain:"兒童保護事件（含疑似）須同時通報社家署、社會局、113關懷e起來三個管道。"},
+    {q:"專業人員知悉疑似兒虐，法定責任通報時限為？", options:["12小時","24小時","48小時","72小時"], correct:1, explain:"依兒少權法第53條，托育人員知悉兒少遭受不當對待有24小時法定責任通報義務。"},
+    {q:"逾時未通報兒虐案件的罰鍰範圍為？", options:["3,000-15,000元","6,000-30,000元","6,000-60,000元","60,000-600,000元"], correct:2, explain:"未於24小時內通報者，處6,000-60,000元罰鍰。"},
+    {q:"兒虐、身心虐待等重大違法之罰鍰範圍為？", options:["6,000-30,000元","60,000-600,000元","3,000-15,000元","18,000-90,000元"], correct:1, explain:"重大違法處60,000-600,000元罰鍰，並得公布姓名，準公共保母將被退出準公共合作。"},
+    {q:"若兒童於家中（非收托時間）遭受虐待，訪視人員發現後應如何處理？", options:["無須處理，非收托時間不歸中心管轄","依法逕行通報，無須通報社家署","僅記錄不通報","等下次訪視再確認"], correct:1, explain:"發現送托兒童於家中或非收托時間遭受虐待，應依法令規定逕行通報，無須通報社家署。"}
+  ]
+},
+{
+  id:"m6", stage:6, stageLabel:"第六階段・法規遵循", title:"裁罰標準與違規處理流程",
+  desc:"常見違規裁罰金額、臺北市違規處理階段流程、記點管理制度",
+  sections:[
+    {h:"常見違規裁罰標準", points:[
+      "未辦理登記收托：處<span class='fine'>6,000-30,000元</span>罰鍰，限期改善屆期未改再罰，並命1個月內轉介兒童。",
+      "超收、規避訪視、輔導未改善：處<span class='fine'>6,000-30,000元</span>罰鍰，得按次處罰；<b>情節重大或3次未改可廢止登記</b>（廢止後1年內不得重新登記）。",
+      "巧立名目違規收費（如蒸飯費、洗澡費）：同樣依此標準裁罰，且會被退出準公共合作。"
+    ], law:"兒少權法第90條第1項（未登記）、第90條第4項、第90條第5項（超收/規避訪視等）；登記及管理辦法第18條之1"},
+    {h:"臺北市違規處理階段流程", points:[
+      "<b>未辦理登記</b>：查獲6,000元→限期1個月改善→未改第1次18,000元→未改第2次30,000元→仍未改再30,000元並強制轉托。",
+      "<b>違規收托人數/登記事項</b>：中心通報→社會局限期1個月改善→未改第1次6,000元（限期30天）→未改第2次18,000元（限期14天）→未改第3次30,000元，<b>廢止登記並強制轉托</b>。",
+      "改善完成者：列管3個月，每月訪視1次，符合規定即結案。"
+    ], law:"兒少權法第26條第1項（未辦理登記）、第26條第5項（違規收托人數）"},
+    {h:"臺北市記點管理制度", points:[
+      "<b>1點</b>：在職訓練未符規定、登記事項變更未辦、未記錄兒童成長過程、未辦理發展篩檢。",
+      "<b>2點</b>：環境檢核不符、收托通報未辦、拒絕訪視、未做健康檢查、未通報傳染病、未簽約、違規收費、處所不符登記、未專心托育。",
+      "<b>3點</b>：準公共收費不符規定、收托時間兼職、超收（收托人數/方式/年齡不符）。",
+      "重複違規以<b>2倍記點</b>；同一項次第2次違規即立即陳報社會局；一年內累積，次年重新計算。",
+      "累計扣點<b>3-5點</b>：暫停媒合3個月；<b>6-10點</b>：暫停媒合6個月；<b>11點以上</b>：暫停媒合1年。三種情形皆不補助隔年責任保險及準公共意外保險。"
+    ], law:"臺北市居家托育記點管理機制（臺北市自訂行政規則，非中央法規）"}
+  ],
+  quiz:[
+    {q:"超收兒童且屆期未改善，最重可能面臨的處分是？", options:["僅罰款了事","廢止登記","記警告即可","暫停收托1週"], correct:1, explain:"情節重大或經處罰3次仍未改善者，得廢止登記，1年內不得重新登記。"},
+    {q:"臺北市累計記點達3-5點，會被暫停媒合多久？", options:["1個月","3個月","6個月","1年"], correct:1, explain:"3-5點暫停媒合3個月，6-10點暫停6個月，11點以上暫停1年。"},
+    {q:"累計記點達11點以上，暫停媒合多久？", options:["3個月","6個月","1年","永久取消資格"], correct:2, explain:"11點以上暫停媒合1年，且不補助隔年責任保險及準公共意外保險。"},
+    {q:"收托時間兼職或經營事業，屬於記點管理中的幾點違規？", options:["1點","2點","3點","不記點"], correct:2, explain:"收托時間兼任或經營職務事業屬3點違規，且立即陳報。"},
+    {q:"未辦理登記提供居家托育，查獲時第一次罰款金額為？", options:["6,000元","18,000元","30,000元","60,000元"], correct:0, explain:"查獲時先處6,000元罰鍰並限期1個月改善，屆期未改善才逐次加重。"}
+  ]
+},
+{
+  id:"m7", stage:7, stageLabel:"第七階段・制度規範", title:"準公共托育與收費規範",
+  desc:"準公共加入與終止條件、提升品質獎助金、收退費項目與收費上限",
+  sections:[
+    {h:"準公共托育的加入與終止", points:[
+      "加入須同時符合積極資格（證照/學歷/結業）與消極資格（近2年無重大違規紀錄）。",
+      "契約效期最長<b>2年</b>；主管機關於效期屆滿<b>60日前</b>通知續約；不續約須於屆滿<b>30日前</b>書面通知。",
+      "即時終止情形：擅自調高費用或超收、規避訪視督導、以詐術或不實資料申請、停托或逾期未換發登記證等。",
+      "因違規遭即時終止者，<b>2年內不得再提出簽約申請</b>；一般自願退出者則為1年內不得申請。",
+      "終止後主管機關應協助轉介，轉介期間可繼續補助家長最長<b>6個月</b>。"
+    ], law:"居家式托育服務準公共作業要點第4點、第5點（續約）、第7點（自願退出）、第8點（即時終止）"},
+    {h:"提升托育服務品質獎助金", points:[
+      "每人每年最高<span class='amount'>18,000元</span>（一次性撥付）。",
+      "申請期間為每年<b>10月1日至10月31日</b>，向居家托育服務中心提出。",
+      "申請資格：契約存續中、申請日前1年內無違規、考核15項中符合13項以上（10項專業服務指標須全數合格）、申請日前1年內至少收托滿9個月或連續6個月、<b>當年度9月30日前完成在職訓練13.5小時以上</b>。",
+      "資料不實或造假者追繳全額，且次年度起<b>2年內不得再申請</b>。"
+    ], law:"作業要點第26點"},
+    {h:"收退費項目規定（適用所有保母，不限準公共）", points:[
+      "應收項目：托育費。得收項目：餐費（副食品）、延長托育費、節慶獎金禮品。",
+      "年終獎金：最高1個月托育費，可攤提，但12個月加總不得超過1個月托育費。",
+      "端午節、中秋節禮金：<b>各上限2,000元</b>，須一次性收取，不得按月攤提。",
+      "<b>不得任意巧立名目收取未列舉項目</b>（如蒸飯費、洗澡費），違者依裁罰標準處分。",
+      "臺北市準公共收費上限：日間托育每月18,000-20,000元，全日托育每月25,000-27,000元（依行政區分兩級）。"
+    ], law:"登記及管理辦法第5條（禁止巧立名目收費）；臺北市居家托育收退費項目及基準（地方公告）"}
+  ],
+  quiz:[
+    {q:"保母可以收取「蒸飯費」「洗澡費」嗎？", options:["可以，屬合理雜支","不行，屬巧立名目違規收費","僅限準公共保母可收","家長同意即可收取"], correct:1, explain:"這屬於巧立名目，違反登記及管理辦法第5條，且會被退出準公共合作，所有保母皆須遵守收費項目規定。"},
+    {q:"準公共托育服務提升品質獎助金每年最高金額為？", options:["10,000元","15,000元","18,000元","20,000元"], correct:2, explain:"每人每年最高18,000元，一次性撥付。"},
+    {q:"端午節、中秋節禮金上限各為多少元？", options:["1,000元","2,000元","3,000元","5,000元"], correct:1, explain:"端午、中秋節禮金各上限2,000元，須一次性收取，不得按月攤提。"},
+    {q:"準公共保母因違規遭即時終止契約，幾年內不得再申請簽約？", options:["1年","2年","3年","5年"], correct:1, explain:"因違規終止者2年內不得再申請簽約；一般自願退出者則為1年。"},
+    {q:"收退費項目規定是否僅適用準公共保母？", options:["是，僅準公共保母須遵守","否，所有居家托育人員皆須遵守","僅在臺北市適用","視個案而定"], correct:1, explain:"收退費項目規定適用於所有居家托育人員，不論是否為準公共保母。"}
+  ]
+},
+{
+  id:"m8", stage:8, stageLabel:"第八階段・制度規範", title:"家長補助與特殊／臨時托育補助",
+  desc:"家長申報資格與計算原則、臺北市友善托育補助、特殊需求兒童與臨時托育補助",
+  sections:[
+    {h:"家長托育補助申報要點", points:[
+      "資格：幼兒為我國籍並完成戶籍登記、送托準公共每週時數達30小時以上、未重複領取育兒津貼、原則不得指定一對一收托（特殊需求幼兒除外）。",
+      "托育事實發生日起<b>15日內</b>備齊文件申報者，從事實發生日起算；逾期申報以資料備齊送達日起算。",
+      "送托日數計算：超過半個月未滿1個月<b>以1個月計</b>；半個月以下<b>以半個月計</b>。",
+      "孩子滿2歲時，補助不會中斷：系統自動比對介接，<b>家長無須重新申請</b>。"
+    ], law:"居家式托育服務準公共作業要點第21點（滿2歲銜接補助）"},
+    {h:"臺北市補助的設籍與排富規定", points:[
+      "設籍規定：申請友善托育補助或協力照顧補助，兒童本人及父母雙方（或單親/監護人）均須<b>設籍臺北市</b>，送托地點也須在臺北市境內。",
+      "排富規定：友善托育補助、中央準公共補助、中央育兒津貼<b>已全面取消</b>排富限制；<b>協力照顧補助</b>則仍須綜所稅率未達20%（弱勢家庭不在此限）。"
+    ]},
+    {h:"補助金額速覽（臺北市，一般家庭）", points:[
+      "0-2歲送托準公共保母：第一胎中央13,000元＋臺北市8,000元；第二胎中央14,000元＋臺北市10,000元；第三胎中央15,000元＋臺北市10,000元。",
+      "非準公共保母及親屬保母：育兒津貼＋臺北市協力照顧補助（結訓/學歷保母加2,000元，證照保母加3,000元）。",
+      "中低收入戶加發2,000元、低收入戶或弱勢家庭加發4,000元；中央加臺北市補助總額不超過實際收費。"
+    ]},
+    {h:"特殊需求兒童補助", points:[
+      "保母端：領有臺北市登記證、每1名保母以收托<b>1名</b>特殊需求兒童為限、當年度須完成至少3小時特教或早療研習。",
+      "受托幼兒須未滿3歲、設籍臺北市，並具備身心障礙證明、重大傷病證明或發展遲緩（含疑似）診斷證明之一。",
+      "補助期間自完成通報早療中心日起算，至停托日、幼兒滿3歲前一日或該年度12月31日止。",
+      "申請時程：原則於次年<b>1月中旬至1月底前</b>提出前一年度整年之收托補助申請。"
+    ]},
+    {h:"臨時托育補助", points:[
+      "對象：設籍臺北市未滿12歲兒童，且符合低收、中低收、原住民、身障、單親等弱勢資格之一；<b>照顧三親等內幼兒不予補助</b>。",
+      "金額：每名兒童每小時<span class='amount'>100元</span>。",
+      "6歲以下：每月最高30小時、每年最高180小時；超過6歲：每月最高20小時、每年最高120小時。",
+      "請款時程：每年4月15日、7月15日、10月15日及12月31日前送社會局請款。"
+    ]}
+  ],
+  quiz:[
+    {q:"家長申報托育補助，托育事實發生後應於幾日內備齊文件申報，才能從事實發生日起算？", options:["7日","15日","30日","60日"], correct:1, explain:"托育事實發生日起15日內備齊文件申報者，從事實發生日起算；逾期則以資料備齊送達日起算。"},
+    {q:"孩子滿2歲時，家長是否需要重新申請2-4歲育兒津貼？", options:["需要，須另外申請","不需要，系統自動比對介接","需向教育部申請","須先終止再重新申辦"], correct:1, explain:"滿2歲當月尚在請領準公共托育服務者，系統自動比對介接，家長無須重新申請。"},
+    {q:"臨時托育補助每小時補助金額為？", options:["50元","80元","100元","150元"], correct:2, explain:"每名兒童每小時補助100元。"},
+    {q:"臺北市特殊需求兒童補助，每名保母最多可收托幾名特殊需求兒童？", options:["1名","2名","3名","無上限"], correct:0, explain:"每1名保母以收托1名特殊需求兒童為限。"},
+    {q:"臺北市「協力照顧補助」是否有排富限制？", options:["無限制","綜所稅率未達20%才可申請","僅低收入戶可申請","僅單親家庭可申請"], correct:1, explain:"協力照顧補助須申請人綜所稅率未達20%（弱勢家庭不在此限）；友善托育補助等其他補助已取消排富限制。"}
+  ]
+},
+{
+  id:"m9", stage:9, stageLabel:"第九階段・法規速查", title:"法規條文彙整",
+  desc:"兒少權法與登記管理辦法常用條文速查，作為訪視工作的法源依據參考",
+  sections:[
+    {h:"《兒童及少年福利與權益保障法》常用條文", points:[
+      "<b>第26條</b>：居家托育人員應接受訪視、輔導與監督，不得規避、妨礙或拒絕。",
+      "<b>第26條之1</b>：規範不得擔任居家托育人員之消極資格。",
+      "<b>第49條</b>：禁止任何人對兒少為遺棄、身心虐待、強迫、出賣或不正當之對待行為。",
+      "<b>第51條</b>：不得使6歲以下兒童或需特別看護之兒少獨處，或交由不適當之人代為照顧。",
+      "<b>第53條</b>：托育人員等專業從業人員知悉兒少遭受不當對待時之24小時法定責任通報義務。",
+      "<b>第90條</b>：違反登記、收托人數或輔導改善規定之罰則依據。"
+    ]},
+    {h:"《居家式托育服務提供者登記及管理辦法》常用條文", points:[
+      "<b>第5條</b>：托育人員禁止行為規範（虐待疏忽、兼職經營、誇大宣傳、規避檢查、收取額外費用）。",
+      "<b>第7條</b>：托育人員收托人數上限規定（防超收）。",
+      "<b>第13條第1項</b>：登記證書不得租借、轉讓或由他人頂替。",
+      "<b>第16條</b>：托育人員收托幼童後向主管機關通報核備之義務。",
+      "<b>第18條之1第1款</b>：托育服務環境應符合安全檢核標準並接受定期檢核。"
+    ]}
+  ],
+  quiz:[
+    {q:"居家托育人員之24小時法定責任通報義務規定於兒少權法第幾條？", options:["第26條","第49條","第53條","第90條"], correct:2, explain:"第53條規範托育人員知悉兒少遭受不當對待時的24小時法定責任通報義務。"},
+    {q:"禁止托育人員收托時間兼任或經營事業，規定於登記及管理辦法第幾條？", options:["第3條","第5條","第7條","第16條"], correct:1, explain:"第5條為托育人員禁止行為規範，包含不得兼職經營事業。"}
+  ]
+}
+];
+
+/* ===================== 進度管理 ===================== */
+const STORAGE_KEY = "lan-training-progress-v1";
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveProgress(p){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }catch(e){}
+}
+let progress = loadProgress();
+
+function moduleStatus(id){
+  const p = progress[id];
+  if(!p) return {status:"new", pct:0};
+  if(p.completed) return {status:"done", pct:100};
+  if(p.bestScore !== undefined) return {status:"progress", pct:Math.round(p.bestScore)};
+  return {status:"new", pct:0};
+}
+
+function overallProgress(){
+  const total = MODULES.length;
+  let done = 0;
+  MODULES.forEach(m => { if(progress[m.id] && progress[m.id].completed) done++; });
+  return Math.round((done/total)*100);
+}
+
+/* ===================== 首頁渲染 ===================== */
+function renderHome(){
+  const listEl = document.getElementById('moduleList');
+  listEl.innerHTML = '';
+  MODULES.forEach((m, idx) => {
+    const st = moduleStatus(m.id);
+    const card = document.createElement('div');
+    card.className = 'mod-card';
+    card.onclick = () => openModule(m.id);
+
+    const ring = document.createElement('div');
+    ring.className = 'mod-ring';
+    const r = 19, c = 2*Math.PI*r;
+    const offset = c - (st.pct/100)*c;
+    ring.innerHTML = `
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <circle cx="23" cy="23" r="${r}" fill="none" stroke="#DCE6E4" stroke-width="4"></circle>
+        <circle cx="23" cy="23" r="${r}" fill="none" stroke="${st.status==='done' ? '#4FAE9A' : '#1F6F6B'}" stroke-width="4"
+          stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"></circle>
+      </svg>
+      <span class="pct">${st.status==='done' ? '✓' : st.pct+'%'}</span>`;
+
+    const body = document.createElement('div');
+    body.className = 'mod-body';
+    body.innerHTML = `<div class="mod-title">${m.stageLabel}｜${m.title}</div><div class="mod-desc">${m.desc}</div>`;
+
+    const badge = document.createElement('div');
+    const label = st.status==='done' ? '已完成' : (st.status==='progress' ? '進行中' : '未開始');
+    const cls = st.status==='done' ? 'status-done' : (st.status==='progress' ? 'status-progress' : 'status-new');
+    badge.className = 'mod-status ' + cls;
+    badge.textContent = label;
+
+    card.appendChild(ring);
+    card.appendChild(body);
+    card.appendChild(badge);
+    listEl.appendChild(card);
+  });
+
+  document.getElementById('overallPct').textContent = overallProgress() + '%';
+  document.getElementById('overallBar').style.width = overallProgress() + '%';
+}
+
+function resetProgress(){
+  if(confirm('確定要重設全部學習進度嗎？此動作無法復原。')){
+    progress = {};
+    saveProgress(progress);
+    renderHome();
+  }
+}
+
+/* ===================== 模組內容頁渲染 ===================== */
+let currentModuleId = null;
+let currentAnswers = {};
+
+function showHome(){
+  currentModuleId = null;
+  document.getElementById('home').style.display = 'block';
+  document.getElementById('detail').style.display = 'none';
+  document.getElementById('home-header').style.display = 'block';
+  document.getElementById('detail-header').style.display = 'none';
+  renderHome();
+  window.scrollTo(0,0);
+}
+
+function openModule(id){
+  currentModuleId = id;
+  currentAnswers = {};
+  const m = MODULES.find(x => x.id === id);
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('detail').style.display = 'block';
+  document.getElementById('home-header').style.display = 'none';
+  document.getElementById('detail-header').style.display = 'block';
+
+  document.getElementById('detailStage').textContent = m.stageLabel;
+  document.getElementById('detailTitle').textContent = m.title;
+  document.getElementById('detailDesc').textContent = m.desc;
+
+  const contentEl = document.getElementById('detailContent');
+  contentEl.innerHTML = m.sections.map(s => `
+    <div class="content-card">
+      <h3><span class="dot"></span>${s.h}</h3>
+      <ul>${s.points.map(p => `<li>${p}</li>`).join('')}</ul>
+      ${s.law ? `<div class="lawtag">依據：${s.law}</div>` : ''}
+    </div>
+  `).join('');
+
+  renderQuiz(m);
+  window.scrollTo(0,0);
+}
+
+function renderQuiz(m){
+  const area = document.getElementById('quizArea');
+  const prior = progress[m.id];
+  area.innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-head">自我測驗</div>
+      <div class="quiz-sub">共 ${m.quiz.length} 題，答對 80% 以上即完成本模組${prior && prior.bestScore !== undefined ? '（目前最佳成績：' + Math.round(prior.bestScore) + '%）' : ''}</div>
+      <div id="qList"></div>
+      <div class="quiz-actions">
+        <button class="btn btn-primary" id="submitBtn" onclick="submitQuiz('${m.id}')">送出答案</button>
+      </div>
+    </div>
+    <div id="resultArea"></div>
+  `;
+  const qList = document.getElementById('qList');
+  qList.innerHTML = m.quiz.map((q, qi) => `
+    <div class="q-block" data-qi="${qi}">
+      <div class="q-text">${qi+1}. ${q.q}</div>
+      ${q.options.map((opt, oi) => `
+        <label class="opt" data-oi="${oi}">
+          <input type="radio" name="q${qi}" value="${oi}" onchange="selectAnswer(${qi}, ${oi})">
+          <span>${opt}</span>
+        </label>
+      `).join('')}
+      <div class="q-explain" id="explain${qi}"></div>
+    </div>
+  `).join('');
+}
+
+function selectAnswer(qi, oi){
+  currentAnswers[qi] = oi;
+}
+
+function submitQuiz(id){
+  const m = MODULES.find(x => x.id === id);
+  const total = m.quiz.length;
+  let correctCount = 0;
+  const unanswered = [];
+
+  m.quiz.forEach((q, qi) => {
+    if(currentAnswers[qi] === undefined) unanswered.push(qi+1);
+  });
+  if(unanswered.length > 0){
+    alert('第 ' + unanswered.join('、') + ' 題尚未作答，請完成所有題目後再送出。');
+    return;
+  }
+
+  m.quiz.forEach((q, qi) => {
+    const block = document.querySelector(`.q-block[data-qi="${qi}"]`);
+    const opts = block.querySelectorAll('.opt');
+    const chosen = currentAnswers[qi];
+    const isCorrect = chosen === q.correct;
+    if(isCorrect) correctCount++;
+
+    opts.forEach((optEl, oi) => {
+      optEl.classList.add('disabled');
+      optEl.querySelector('input').disabled = true;
+      if(oi === q.correct) optEl.classList.add('correct');
+      else if(oi === chosen && !isCorrect) optEl.classList.add('wrong');
+    });
+
+    const exp = document.getElementById('explain' + qi);
+    exp.style.display = 'block';
+    exp.textContent = (isCorrect ? '✓ 答對了。' : '✗ 正確答案：' + q.options[q.correct] + '。') + '　' + q.explain;
+  });
+
+  document.getElementById('submitBtn').disabled = true;
+
+  const score = Math.round((correctCount/total)*100);
+  const passed = score >= 80;
+
+  if(!progress[id]) progress[id] = {};
+  progress[id].bestScore = Math.max(progress[id].bestScore || 0, score);
+  progress[id].attempts = (progress[id].attempts || 0) + 1;
+  if(passed) progress[id].completed = true;
+  saveProgress(progress);
+
+  const resultArea = document.getElementById('resultArea');
+  resultArea.innerHTML = `
+    <div class="result-banner ${passed ? 'result-pass' : 'result-fail'}">
+      <div class="result-score">${correctCount} / ${total} 題正確（${score}%）</div>
+      <div class="result-msg">${passed ? '已達成 80% 標準，本模組標記為完成！' : '未達 80% 標準，建議重新複習內容後再測驗一次。'}</div>
+      <div class="result-actions">
+        <button class="btn btn-ghost" onclick="openModule('${id}')">重新測驗</button>
+        <button class="btn btn-primary" onclick="showHome()">返回課程總覽</button>
+      </div>
+    </div>
+  `;
+  resultArea.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ===================== 初始化 ===================== */
+renderHome();
+</script>
+</body>
+</html>
